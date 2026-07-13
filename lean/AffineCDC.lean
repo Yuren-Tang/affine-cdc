@@ -13,3 +13,5 @@ import AffineCDC.Branching
 import AffineCDC.Dart
 import AffineCDC.Fano
 import AffineCDC.Comparison
+import AffineCDC.Cover
+import AffineCDC.Cycle

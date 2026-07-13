@@ -58,3 +58,8 @@ Source scan (should print nothing):
 -- F3 and the internalized comparison
 #print axioms AffineCDC.DartFlow.exists_gluing_labels
 #print axioms AffineCDC.slotFamily_eq_localFamily
+
+-- G: the cycle double cover (library endpoint, extended per user decision)
+#print axioms AffineCDC.DartFlow.Msupp_sigma
+#print axioms AffineCDC.DartFlow.Msupp_vertex_unique
+#print axioms AffineCDC.DartFlow.exists_cycle_double_cover
