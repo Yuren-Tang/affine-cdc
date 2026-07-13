@@ -33,6 +33,11 @@ jobs:
             exit 1
           fi
 
+      - name: Env linters (unused hypotheses etc.)
+        working-directory: lean
+        run: |
+          lake exe runLinter AffineCDC.Basic AffineCDC.Rank AffineCDC.LocalEvenFamily AffineCDC.LocalClassification AffineCDC.Naturality AffineCDC.Torsor AffineCDC.OppositeFiber AffineCDC.EdgeQuotient AffineCDC.Gauge AffineCDC.DualConfig AffineCDC.Invariance AffineCDC.Branching AffineCDC.Dart AffineCDC.Fano AffineCDC.Comparison AffineCDC.Cover AffineCDC.Cycle
+
       - name: Source scan (no sorry / native_decide / axiom / unsafe)
         run: |
           if grep -rn --include="*.lean" -E "\bsorry\b|\badmit\b|\bnative_decide\b|^\s*(axiom|opaque|unsafe)\b" lean/AffineCDC lean/AffineCDC.lean | grep -v "Audit.lean"; then

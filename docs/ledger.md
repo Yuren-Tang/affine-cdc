@@ -40,6 +40,9 @@
   `lake exe graph`(importGraph 包,模組級依賴圖,本庫已有此依賴)、
   逐定理試刪假設重編譯;定理級 JSON 依賴圖生成器(用戶外部工具/Erdős 306
   經驗)在凍結期接入。
+- **runLinter 實測結論(2026-07-13)**:Batteries env linters(含
+  `unusedArguments` 逐定理未用假設檢查)全庫 17 模組**首輪全綠**——
+  「逐定理刪」的正規替代已落地並接入 CI(每次推送常駐審查)。
 - **shake 實測結論(2026-07-13)**:**內部依賴圖的判斷可信且有價值**
   (已採納:Dart 只需 LocalClassification;Fano 顯式引其真依賴
   Rank/Branching/Gauge;Cover 顯式引 Fano/OppositeFiber;DualConfig 只需
