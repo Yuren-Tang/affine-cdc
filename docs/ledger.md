@@ -32,6 +32,9 @@
   G2 **圈 = ρ-軌道**,`ρ := 頂點配對 ∘ σ`(dart 語言下圈分解 = 置換軌道
   分解,免頂點路徑形式化——規範自由的又一增益);G3 每邊恰兩次(B1);
   G4 打包。凍結順延至 G 完成後。
+- **Release 政策(鐵律)**:任何 tag / GitHub Release / Zenodo 存檔之前,
+  必須完成狀態交用戶審查——嚴禁產生髒 DOI。日常只推 commit,不 tag。
+- **分支設計**:`main`(穩定、CI 綠、可審查)/ `dev`(整合開發)。
 - **依賴審查工具鏈**:`#min_imports`(Mathlib 命令,逐檔最小 import)、
   `lake exe graph`(importGraph 包,模組級依賴圖,本庫已有此依賴)、
   逐定理試刪假設重編譯;定理級 JSON 依賴圖生成器(用戶外部工具/Erdős 306
