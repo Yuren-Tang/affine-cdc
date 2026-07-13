@@ -1,4 +1,5 @@
 import AffineCDC.LocalClassification
+import Mathlib.LinearAlgebra.Quotient.Basic
 
 /-!
 # Edge quotients (T3)

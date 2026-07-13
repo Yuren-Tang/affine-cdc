@@ -1,5 +1,7 @@
 import AffineCDC.DualConfig
-import AffineCDC.EdgeQuotient
+import AffineCDC.LocalClassification
+import Mathlib.LinearAlgebra.Projection
+import Mathlib.GroupTheory.GroupAction.Ring
 
 /-!
 # Uniqueness of the invariant functional (T6)

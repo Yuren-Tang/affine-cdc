@@ -1,4 +1,4 @@
-import AffineCDC.LocalClassification
+import AffineCDC.Basic
 
 /-!
 # The cross-pairing bit (T5)

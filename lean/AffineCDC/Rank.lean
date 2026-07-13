@@ -1,4 +1,5 @@
 import AffineCDC.Basic
+import Mathlib.LinearAlgebra.Dimension.Finrank
 
 /-!
 # The rank bridge: `finrank = 2` gives a plane

@@ -1,4 +1,5 @@
 import AffineCDC.DualConfig
+import Mathlib.LinearAlgebra.Dimension.Finrank
 
 /-!
 # The branching identity (T7, F1 — graph-free core)

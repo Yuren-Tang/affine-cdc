@@ -1,4 +1,5 @@
 import AffineCDC.Basic
+import Mathlib.LinearAlgebra.Quotient.Defs
 
 /-!
 # Local even families of affine lines

@@ -1,6 +1,4 @@
-import AffineCDC.Branching
-import AffineCDC.Gauge
-import AffineCDC.EdgeQuotient
+import AffineCDC.LocalClassification
 
 /-!
 # The dart layer (T7, F0)

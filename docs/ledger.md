@@ -40,6 +40,13 @@
   `lake exe graph`(importGraph 包,模組級依賴圖,本庫已有此依賴)、
   逐定理試刪假設重編譯;定理級 JSON 依賴圖生成器(用戶外部工具/Erdős 306
   經驗)在凍結期接入。
+- **shake 實測結論(2026-07-13)**:**內部依賴圖的判斷可信且有價值**
+  (已採納:Dart 只需 LocalClassification;Fano 顯式引其真依賴
+  Rank/Branching/Gauge;Cover 顯式引 Fano/OppositeFiber;DualConfig 只需
+  Basic;Invariance 顯式引 DualConfig+LocalClassification——內部圖與架構
+  圖紙一致化);**Mathlib-級 import 精簡不可信**(漏戰術依賴如 `abel`、
+  漏 `Dual.Lemmas` 等)——Basic/Gauge 維持 `import Mathlib`,二層精確化
+  留給檔內運行的 `#min_imports`(凍結後段)。`scripts/noshake.json` 已建。
 
 ### 決策記錄:與 OpenAI Lean 的關係(2026-07-12 定調,經用戶確認方向)
 

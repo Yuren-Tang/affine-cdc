@@ -1,4 +1,5 @@
 import AffineCDC.LocalClassification
+import Mathlib.LinearAlgebra.AffineSpace.AffineEquiv
 
 /-!
 # Torsor packaging (Corollary A1)

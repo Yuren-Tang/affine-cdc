@@ -1,6 +1,7 @@
 import AffineCDC.Dart
 import AffineCDC.Rank
-
+import AffineCDC.Branching
+import AffineCDC.Gauge
 /-!
 # The Fano compatibility theorem (T7, F2)
 

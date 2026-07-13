@@ -1,4 +1,6 @@
 import AffineCDC.LocalClassification
+import Mathlib.LinearAlgebra.DFinsupp
+import Mathlib.LinearAlgebra.Quotient.Basic
 
 /-!
 # Naturality (Corollary A2)
