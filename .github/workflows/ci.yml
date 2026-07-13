@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Get Mathlib cache
+        working-directory: lean
+        run: lake exe cache get
+
+      - name: Build
+        working-directory: lean
+        run: lake build
+
+      - name: Audit (axiom footprint of T1–T7)
+        working-directory: lean
+        run: |
+          lake env lean AffineCDC/Audit.lean | tee audit.out
+          if grep "depends on axioms" audit.out | grep -v "propext, Classical.choice, Quot.sound"; then
+            echo "::error::nonstandard axioms detected"
+            exit 1
+          fi
+
+      - name: Source scan (no sorry / native_decide / axiom / unsafe)
+        run: |
+          if grep -rn --include="*.lean" -E "\bsorry\b|\badmit\b|\bnative_decide\b|^\s*(axiom|opaque|unsafe)\b" lean/AffineCDC lean/AffineCDC.lean | grep -v "Audit.lean"; then
+            echo "::error::forbidden construct found"
+            exit 1
+          else
+            echo "source clean"
+          fi
