@@ -36,7 +36,7 @@ jobs:
       - name: Env linters (unused hypotheses etc.)
         working-directory: lean
         run: |
-          lake exe runLinter AffineCDC.Basic AffineCDC.Rank AffineCDC.LocalEvenFamily AffineCDC.LocalClassification AffineCDC.Naturality AffineCDC.Torsor AffineCDC.OppositeFiber AffineCDC.EdgeQuotient AffineCDC.Gauge AffineCDC.DualConfig AffineCDC.Invariance AffineCDC.Branching AffineCDC.Dart AffineCDC.Fano AffineCDC.Comparison AffineCDC.Cover AffineCDC.Cycle
+          lake exe runLinter AffineCDC.Basic AffineCDC.Rank AffineCDC.LocalEvenFamily AffineCDC.LocalClassification AffineCDC.Naturality AffineCDC.Torsor AffineCDC.OppositeFiber AffineCDC.EdgeQuotient AffineCDC.Gauge AffineCDC.DualConfig AffineCDC.Invariance AffineCDC.Branching AffineCDC.Dart AffineCDC.Fano AffineCDC.Comparison AffineCDC.Cover AffineCDC.Cycle AffineCDC.Statement AffineCDC.Decompose AffineCDC.Port
 
       - name: Source scan (no sorry / native_decide / axiom / unsafe)
         run: |
