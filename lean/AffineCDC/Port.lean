@@ -264,4 +264,145 @@ noncomputable def graphDartFlow : DartFlow (Dartt G) (Vtx G) Γ where
       · exact ⟨⟨⟨(e₃, u.1), (hincs e₃).mpr (Or.inr (Or.inr rfl))⟩, Subtype.ext rfl⟩,
           Subtype.ext h3.symm⟩
 
+/-! ## The cover assembly (P1): `cubic_flow_cdc` -/
+
+open scoped Classical in
+/-- Filtering-card is additive over a `Finset.sum` of multisets. -/
+private lemma card_filter_sum {γ : Type*} {ι : Type*} (T : Finset ι)
+    (g : ι → Multiset (Set γ)) (p : Set γ → Prop) :
+    ((T.sum g).filter p).card = T.sum (fun i => ((g i).filter p).card) := by
+  classical
+  induction T using Finset.induction with
+  | empty => simp
+  | insert a s ha ih =>
+    rw [Finset.sum_insert ha, Multiset.filter_add, Multiset.card_add,
+      Finset.sum_insert ha, ih]
+
+/-- Membership in a `Finset.sum` of multisets. -/
+private lemma mem_finset_sum {γ : Type*} {ι : Type*} (T : Finset ι)
+    (g : ι → Multiset (Set γ)) (C : Set γ) :
+    C ∈ T.sum g ↔ ∃ i ∈ T, C ∈ g i := by
+  classical
+  induction T using Finset.induction with
+  | empty => simp
+  | insert a s ha ih =>
+    rw [Finset.sum_insert ha, Multiset.mem_add, ih, Finset.exists_mem_insert]
+
+/-- **Intermediate macro-Port theorem** (`cubic_flow_cdc`): every finite
+loopless cubic multigraph carrying a nowhere-zero `𝔽₂³`-flow has a cycle
+double cover.  Proved entirely within the AffineCDC core (no `cdc-lean`).
+This is *not* the final unconditional CDC; the unconditional theorem is
+obtained in an isolated integration layer composing the classical
+bridgeless→cubic→flow reduction with this construction. -/
+theorem cubic_flow_cdc : CubicFlowCDCStatement := by
+  intro α β _ _ G f hloop hcubic hflow
+  classical
+  letI : Fintype (Dartt G) := Fintype.ofFinite _
+  letI : Fintype (Vtx G) := Fintype.ofFinite _
+  set D := graphDartFlow hloop hcubic hflow with hD
+  -- codimension-one at every vertex plane
+  have hcodim : ∀ u : Vtx G, Module.finrank (ZMod 2) (Γ ⧸ D.W u) = 1 := by
+    intro u
+    have hΓ : Module.finrank (ZMod 2) Γ = 3 := by simp [Γ]
+    have hW : Module.finrank (ZMod 2) (D.W u) = 2 :=
+      (isPlane_vertexPlane hcubic hflow u.2).finrank_eq_two
+    have hq := Submodule.finrank_quotient_add_finrank (D.W u)
+    omega
+  obtain ⟨M, hσ, hcov2, huniq, -⟩ := D.exists_cycle_double_cover hcodim
+  -- edge supports
+  set edgeSupp : Γ → Set β := fun s => (fun d : Dartt G => d.1.1) '' M s with hES
+  -- (2) edge membership ⟺ endpoint-dart membership
+  have hEdart : ∀ (s : Γ) (e : β) (u : α) (he : G.Inc e u),
+      e ∈ edgeSupp s ↔ (⟨(e, u), he⟩ : Dartt G) ∈ M s := by
+    intro s e u he
+    constructor
+    · rintro ⟨d, hd, hde⟩
+      have hincd : G.Inc e d.1.2 := hde ▸ d.2
+      rcases hincd.isLink_other.left_eq_or_eq he.isLink_other with hw | hw
+      · have hdeq : d = ⟨(e, u), he⟩ := by
+          apply Subtype.ext; exact Prod.ext hde hw
+        rwa [hdeq] at hd
+      · have hdeq : d = D.σ ⟨(e, u), he⟩ := by
+          apply Subtype.ext; exact Prod.ext hde hw
+        rw [hdeq] at hd
+        exact (hσ s ⟨(e, u), he⟩).mp hd
+    · intro hmem
+      exact ⟨⟨(e, u), he⟩, hmem, rfl⟩
+  -- edge supports lie in the edge set
+  have hESE : ∀ s, edgeSupp s ⊆ E(G) := by
+    rintro s e ⟨d, hd, rfl⟩; exact d.2.edge_mem
+  -- (4-prep) support darts at a vertex are even in number
+  have hSu_even : ∀ (s : Γ) (u : α),
+      Even ({d : Dartt G | d ∈ M s ∧ d.1.2 = u}.ncard) := by
+    intro s u
+    by_cases hne : {d : Dartt G | d ∈ M s ∧ d.1.2 = u}.Nonempty
+    · obtain ⟨d, hd, hdu⟩ := hne
+      obtain ⟨d', ⟨hd'ne, hd'v, hd'm⟩, hd'uniq⟩ := huniq s d hd
+      have hd'u : d'.1.2 = u := by
+        have hv : d'.1.2 = d.1.2 := congrArg Subtype.val hd'v
+        rw [hv]; exact hdu
+      have hSeq : {d : Dartt G | d ∈ M s ∧ d.1.2 = u} = {d, d'} := by
+        ext x
+        simp only [Set.mem_setOf_eq, Set.mem_insert_iff, Set.mem_singleton_iff]
+        constructor
+        · rintro ⟨hxm, hxu⟩
+          by_cases hxd : x = d
+          · exact Or.inl hxd
+          · refine Or.inr (hd'uniq x ⟨hxd, ?_, hxm⟩)
+            apply Subtype.ext
+            show x.1.2 = d.1.2
+            rw [hxu, hdu]
+        · rintro (rfl | rfl)
+          · exact ⟨hd, hdu⟩
+          · exact ⟨hd'm, hd'u⟩
+      rw [hSeq, Set.ncard_pair (Ne.symm hd'ne)]
+      exact even_two
+    · rw [Set.not_nonempty_iff_eq_empty] at hne
+      rw [hne, Set.ncard_empty]; exact ⟨0, rfl⟩
+  -- (3) each edge support is even
+  have hEven : ∀ s, Statement.IsEven G (edgeSupp s) := by
+    intro s u
+    have hset : edgeSupp s ∩ G.incidenceSet u
+        = (fun d : Dartt G => d.1.1) '' {d : Dartt G | d ∈ M s ∧ d.1.2 = u} := by
+      ext e
+      simp only [Set.mem_inter_iff, Set.mem_image, Set.mem_setOf_eq]
+      constructor
+      · rintro ⟨hes, hinc⟩
+        exact ⟨⟨(e, u), hinc⟩, ⟨(hEdart s e u hinc).mp hes, rfl⟩, rfl⟩
+      · rintro ⟨d, ⟨hdm, hdu⟩, rfl⟩
+        exact ⟨⟨d, hdm, rfl⟩, hdu ▸ d.2⟩
+    rw [hset]
+    have hinj : Set.InjOn (fun d : Dartt G => d.1.1)
+        {d : Dartt G | d ∈ M s ∧ d.1.2 = u} := by
+      rintro d1 ⟨_, hd1u⟩ d2 ⟨_, hd2u⟩ h12
+      apply Subtype.ext; exact Prod.ext h12 (by rw [hd1u, hd2u])
+    rw [hinj.ncard_image]
+    exact hSu_even s u
+  -- (7) each edge lies in exactly two edge supports
+  have hEdgeCov : ∀ e ∈ E(G), {s : Γ | e ∈ edgeSupp s}.ncard = 2 := by
+    intro e he
+    obtain ⟨u, v, huv⟩ := G.exists_isLink_of_mem_edgeSet he
+    have hincu : G.Inc e u := ⟨v, huv⟩
+    have hEq : {s : Γ | e ∈ edgeSupp s} = {s | (⟨(e, u), hincu⟩ : Dartt G) ∈ M s} := by
+      ext s; exact hEdart s e u hincu
+    rw [hEq]; exact hcov2 _
+  -- (4,5) decompose each support into cycles
+  have hdecomp : ∀ s, ∃ 𝒟 : Multiset (Set β),
+      (∀ C ∈ 𝒟, Statement.IsCycle G C) ∧
+      ∀ e, (𝒟.filter fun C => e ∈ C).card = if e ∈ edgeSupp s then 1 else 0 :=
+    fun s => Statement.exists_cycle_decomposition' G (hESE s) (hEven s)
+  choose 𝒟 h𝒟cyc h𝒟count using hdecomp
+  -- (6,7,8) bind over `Γ` and count
+  refine ⟨Finset.univ.sum 𝒟, ?_, ?_⟩
+  · intro C hC
+    rw [mem_finset_sum] at hC
+    obtain ⟨s, -, hCs⟩ := hC
+    exact h𝒟cyc s C hCs
+  · intro e he
+    rw [card_filter_sum, Finset.sum_congr rfl (fun s _ => h𝒟count s e),
+      Finset.sum_boole]
+    have h1 : {s : Γ | e ∈ edgeSupp s}.ncard = 2 := hEdgeCov e he
+    rw [Set.ncard_eq_toFinset_card', Set.toFinset_setOf] at h1
+    exact_mod_cast h1
+
 end AffineCDC.Port

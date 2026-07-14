@@ -1,4 +1,5 @@
 import AffineCDC
+import AffineCDC.Port
 
 /-!
 # Audit
@@ -63,3 +64,7 @@ Source scan (should print nothing):
 #print axioms AffineCDC.DartFlow.Msupp_sigma
 #print axioms AffineCDC.DartFlow.Msupp_vertex_unique
 #print axioms AffineCDC.DartFlow.exists_cycle_double_cover
+
+-- P1: intermediate macro-Port theorem (cubic + F2^3-flow => CDC)
+#check @AffineCDC.Port.cubic_flow_cdc
+#print axioms AffineCDC.Port.cubic_flow_cdc
