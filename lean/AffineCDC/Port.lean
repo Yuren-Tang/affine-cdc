@@ -2,10 +2,17 @@ import AffineCDC.Cycle
 import AffineCDC.Decompose
 
 /-!
-# Bridge to Mathlib graphs (the Port)
+# The cubic-flow interface (the Port)
 
-Proves `CDCStatement` (Statement.lean) from the affine development's endpoint
-`DartFlow.exists_cycle_double_cover`.  The work is a bridge in two directions:
+This file proves the **intermediate** result — *cubic + nowhere-zero `𝔽₂³`-flow
+⟹ cycle double cover* — by constructing the affine core's `DartFlow` from a
+Mathlib multigraph and reading off the cover.  It is **not** the CDC statement
+(`Statement.lean`, which is the standard unconditional conjecture with no
+cubic/flow hypotheses); it is the semantic port from Mathlib's `Graph α β` to
+the affine development.  The full unconditional CDC composes this construction
+with the classical bridgeless→cubic→8-flow reduction.
+
+The work is a bridge in two directions:
 
 * **Graph → DartFlow**: a finite loopless cubic multigraph with a nowhere-zero
   `𝔽₂³`-flow yields a `DartFlow`; the three flow values at each vertex are
@@ -27,6 +34,31 @@ abbrev Γ : Type := Fin 3 → ZMod 2
 
 variable {α β : Type*} [Finite α] [Finite β] {G : Graph α β}
   {f : β → Γ}
+
+/-! ## Proof-interface notions (cubic graphs and flows)
+
+These are **not** part of the CDC statement (`Statement.lean`); they are the
+hypotheses of the affine construction, kept here in the construction layer. -/
+
+/-- `G` is **cubic** if every vertex is incident to exactly three edges. -/
+def Cubic (G : Graph α β) : Prop := ∀ x ∈ V(G), (G.incidenceSet x).ncard = 3
+
+/-- A **nowhere-zero `𝔽₂³`-flow**: nonzero values on the edges summing to zero
+around every vertex.  Over characteristic two, orientation is irrelevant
+(`-x = x`), so conservation is the unoriented incidence sum. -/
+structure NowhereZeroFlow (G : Graph α β) (f : β → Γ) : Prop where
+  nowhere_zero : ∀ e ∈ E(G), f e ≠ 0
+  conservation : ∀ x ∈ V(G), ∑ᶠ e ∈ G.incidenceSet x, f e = 0
+
+/-- The **intermediate** (cubic-flow) statement: every finite loopless cubic
+multigraph carrying a nowhere-zero `𝔽₂³`-flow has a cycle double cover.  This is
+the semantic port that the affine core establishes; the unconditional CDC
+(`Statement.CDCStatement`) is obtained by prepending the classical
+bridgeless→cubic→8-flow reduction. -/
+def CubicFlowCDCStatement : Prop :=
+  ∀ {α β : Type} [Finite α] [Finite β] (G : Graph α β) (f : β → Γ),
+    Loopless G → Cubic G → NowhereZeroFlow G f →
+    ∃ 𝒞 : Multiset (Set β), IsCycleDoubleCover G 𝒞
 
 /-! ## The three incident edges and their Klein structure -/
 
