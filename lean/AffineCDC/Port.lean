@@ -162,4 +162,74 @@ lemma vertex_facts (hcubic : Cubic G) (hflow : NowhereZeroFlow G f)
     · exact Or.inr (Or.inr (Or.inr (by rw [hc_eq]; exact hst.symm)))
   exact ⟨e₁, e₂, e₃, hincs, hz1, hz2, hz3, hab, hac, hbc, hcarrier⟩
 
+/-! ## The DartFlow of a graph -/
+
+/-- Vertices of the DartFlow: the actual vertex set (so every one carries a
+plane). -/
+abbrev Vtx (G : Graph α β) : Type _ := {x : α // x ∈ V(G)}
+
+/-- Darts: incidence pairs `(edge, incident vertex)`. -/
+abbrev Dartt (G : Graph α β) : Type _ := {p : β × α // G.Inc p.1 p.2}
+
+/-- The other end of a dart's edge (the `σ`-partner's vertex is well defined by
+`right_unique`). -/
+lemma other_other (d : Dartt G) : (d.2.inc_other).other = d.1.2 :=
+  ((d.2.inc_other).isLink_other).right_unique (d.2.isLink_other.symm)
+
+variable (hloop : Loopless G) (hcubic : Cubic G) (hflow : NowhereZeroFlow G f)
+
+/-- The DartFlow associated to a finite loopless cubic graph with a
+nowhere-zero `𝔽₂³`-flow. -/
+noncomputable def graphDartFlow : DartFlow (Dartt G) (Vtx G) Γ where
+  σ d := ⟨(d.1.1, d.2.other), d.2.inc_other⟩
+  invol d := by
+    apply Subtype.ext; apply Prod.ext
+    · rfl
+    · exact other_other d
+  no_fix d := by
+    intro h
+    have hv : (d.2.other) = d.1.2 := congrArg (fun p => p.1.2) h
+    exact hloop d.1.1 d.1.2 (by
+      have := d.2.isLink_other; rw [hv] at this; exact this)
+  vtx d := ⟨d.1.2, d.2.isLink_other.left_mem⟩
+  f d := f d.1.1
+  f_σ _ := rfl
+  W u := vertexPlane G f u.1
+  plane u := isPlane_vertexPlane hcubic hflow u.2
+  mem d := mem_vertexPlane d.2
+  nz d := hflow.nowhere_zero d.1.1 d.2.edge_mem
+  cubic u := by
+    obtain ⟨e₁, e₂, e₃, hincs, hz1, hz2, hz3, h12, h13, h23, hcarrier⟩ :=
+      vertex_facts hcubic hflow u.2
+    constructor
+    · -- injective
+      intro d d' heq
+      have hff : f d.1.1.1 = f d'.1.1.1 := congrArg Subtype.val heq
+      have hdu : d.1.1.2 = u.1 := congrArg Subtype.val d.2
+      have hdu' : d'.1.1.2 = u.1 := congrArg Subtype.val d'.2
+      have hince : d.1.1.1 = e₁ ∨ d.1.1.1 = e₂ ∨ d.1.1.1 = e₃ :=
+        (hincs _).mp (hdu ▸ d.1.2)
+      have hince' : d'.1.1.1 = e₁ ∨ d'.1.1.1 = e₂ ∨ d'.1.1.1 = e₃ :=
+        (hincs _).mp (hdu' ▸ d'.1.2)
+      have hedge : d.1.1.1 = d'.1.1.1 := by
+        rcases hince with h | h | h <;> rcases hince' with h' | h' | h' <;>
+          rw [h, h'] at hff ⊢ <;>
+          first
+            | rfl
+            | exact absurd hff h12 | exact absurd hff h13 | exact absurd hff h23
+            | exact absurd hff.symm h12 | exact absurd hff.symm h13
+            | exact absurd hff.symm h23
+      apply Subtype.ext; apply Subtype.ext; apply Prod.ext hedge
+      exact hdu.trans hdu'.symm
+    · -- surjective
+      rintro ⟨h, hmem, hne⟩
+      rcases hcarrier h hmem with h0 | h1 | h2 | h3
+      · exact absurd h0 hne
+      · exact ⟨⟨⟨(e₁, u.1), (hincs e₁).mpr (Or.inl rfl)⟩, Subtype.ext rfl⟩,
+          Subtype.ext h1.symm⟩
+      · exact ⟨⟨⟨(e₂, u.1), (hincs e₂).mpr (Or.inr (Or.inl rfl))⟩, Subtype.ext rfl⟩,
+          Subtype.ext h2.symm⟩
+      · exact ⟨⟨⟨(e₃, u.1), (hincs e₃).mpr (Or.inr (Or.inr rfl))⟩, Subtype.ext rfl⟩,
+          Subtype.ext h3.symm⟩
+
 end AffineCDC.Port
