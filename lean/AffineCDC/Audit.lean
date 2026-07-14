@@ -1,12 +1,16 @@
 import AffineCDC
-import AffineCDC.Port
 
 /-!
 # Audit
 
 `lake env lean AffineCDC/Audit.lean` prints the axiom footprint of the
-headline results (T1–T3).  Expected output for every line:
-`[propext, Classical.choice, Quot.sound]`.
+headline results across the whole development: T1–T7, the dart-level Fano
+compatibility/cycle-cover endpoints, the internalized comparison lemma, and
+the Graph-level intermediate macro-Port theorem `cubic_flow_cdc`.  Expected
+output for every line: `[propext, Classical.choice, Quot.sound]`.
+
+(`import AffineCDC` (the root aggregate) already transitively imports
+`AffineCDC.Port`, so no separate import of `Port` is needed here.)
 
 Source scan (should print nothing):
 `rg -n '\bsorry\b|\badmit\b|\bnative_decide\b|^\s*(axiom|opaque|unsafe)\b' AffineCDC/`

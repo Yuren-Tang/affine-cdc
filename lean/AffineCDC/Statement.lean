@@ -5,9 +5,12 @@ import Mathlib
 
 **This file is the audit surface.**  It imports only Mathlib and contains only
 the standard vocabulary of the conjecture.  A graph theorist can read it in
-isolation and confirm that `CDCStatement` is *exactly* the Cycle Double Cover
-conjecture — every finite loopless bridgeless multigraph has a cycle double
-cover — with no reliance on bespoke definitions and no extra hypotheses.
+isolation and confirm that `CDCStatement` is a loopless finite-multigraph
+formalization of the Cycle Double Cover conjecture — every finite loopless
+bridgeless multigraph has a cycle double cover — with no reliance on bespoke
+definitions.  This is *a* standard formalization, not asserted to be the only
+possible literalization of the conjecture; see the loop and finiteness
+conventions documented below and at `CDCStatement`.
 
 In particular the audit surface contains **no** proof-interface notions
 (no cubic, no flows, no `𝔽₂³`, no darts, no planes); those belong to the
@@ -29,8 +32,13 @@ variable {α β : Type*}
 
 /-! ## Cycles and covers -/
 
-/-- An edge-set is **even** when every vertex meets an even number of its edges
-(even degree).  For a loopless graph the incidence count is the degree. -/
+/-- An edge-set is **even** when every vertex meets an even number of its edges.
+The count is taken via `incidenceSet`, which counts each incident edge *object*
+once — for a loopless graph this coincides with vertex degree, but a loop edge
+(both ends equal) would only contribute `1`, not the degree-`2` a loop
+conventionally contributes.  This definition is therefore intended for, and
+only verified against, loopless graphs (`Loopless`, below); the loop case is
+excluded by convention here rather than shown separately to be degenerate. -/
 def IsEven (G : Graph α β) (C : Set β) : Prop :=
   ∀ x : α, Even (C ∩ G.incidenceSet x).ncard
 
@@ -72,13 +80,20 @@ def Bridgeless (G : Graph α β) : Prop :=
 
 /-! ## The conjecture -/
 
-/-- **The Cycle Double Cover conjecture.**  Every finite loopless bridgeless
-multigraph has a cycle double cover.
+/-- **The Cycle Double Cover conjecture** (loopless, finite-multigraph
+formalization).  Every finite loopless bridgeless multigraph has a cycle
+double cover.
 
-`α`, `β` range over finite ambient types, so `G` is a finite multigraph.  There
-are **no** additional hypotheses: `Loopless` and `Bridgeless` are the standard
-scope of the conjecture (loops trivially have no cover; a bridge lies in no
-cycle). -/
+`[Finite α] [Finite β]` means the *ambient* vertex and edge types are finite,
+so in particular `V(G)` and `E(G)` are finite — `G` is a finite multigraph.
+
+`Loopless` and `Bridgeless` are the two hypotheses of the conjecture as
+formalized here.  `Bridgeless` is the standard scope restriction (a bridge
+lies in no cycle, so a graph with a bridge cannot have a cycle double cover).
+`Loopless` is required by the `IsEven`/incidence-parity convention used above,
+which does not give loops their conventional degree-`2` contribution; it is
+not claimed here that loops are "trivially" excluded on independent
+mathematical grounds. -/
 def CDCStatement : Prop :=
   ∀ {α β : Type} [Finite α] [Finite β] (G : Graph α β),
     Loopless G → Bridgeless G →
