@@ -16,3 +16,4 @@ import AffineCDC.Comparison
 import AffineCDC.Cover
 import AffineCDC.Cycle
 import AffineCDC.Statement
+import AffineCDC.Decompose
