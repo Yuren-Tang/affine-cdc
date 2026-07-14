@@ -1,1 +1,8 @@
 .lake/
+.DS_Store
+__pycache__/
+*.pyc
+*.swp
+*~
+AffineCDC/AxCheck.lean
+AffineCDC/_scratch*.lean
