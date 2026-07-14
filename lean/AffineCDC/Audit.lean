@@ -64,10 +64,11 @@ Source scan (should print nothing):
 #print axioms AffineCDC.DartFlow.exists_gluing_labels
 #print axioms AffineCDC.slotFamily_eq_localFamily
 
--- G: the cycle double cover (library endpoint, extended per user decision)
+-- G: the indexed dart cover (dart-level; see cubic_flow_cdc below for the
+-- graph-level Statement.IsCycleDoubleCover this data is used to extract)
 #print axioms AffineCDC.DartFlow.Msupp_sigma
 #print axioms AffineCDC.DartFlow.Msupp_vertex_unique
-#print axioms AffineCDC.DartFlow.exists_cycle_double_cover
+#print axioms AffineCDC.DartFlow.exists_indexed_dart_cover
 
 -- P1: intermediate macro-Port theorem (cubic + F2^3-flow => CDC)
 #check @AffineCDC.Port.cubic_flow_cdc

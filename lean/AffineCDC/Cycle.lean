@@ -12,10 +12,17 @@ import AffineCDC.Cover
 * `rho`/`rhoInv` (**G2**): the rotation `ρ = partner ∘ σ` and its inverse
   `σ ∘ partner`; its orbits are the cycles of the support — in dart
   language, cycle decomposition *is* orbit decomposition of a permutation;
-* `exists_cycle_double_cover` (**G4**): the endpoint — supports of a glued
-  gauge form a cycle double cover: σ-closed subgraphs covering every edge
-  exactly twice, 2-regular where present, with the rotation witnessing the
-  cycle structure.
+* `exists_indexed_dart_cover` (**G4**): the endpoint at this dart level —
+  the supports of a glued gauge form a Γ-indexed family of dart-subsets that
+  is σ-closed, exact-two-covered per dart, has a unique same-vertex partner
+  per member, and carries an explicit rotation `ρ`.  This is *not* itself a
+  `Statement.IsCycleDoubleCover` on a Mathlib graph; it is the raw
+  Γ-indexed/dart-level structural data from which one is extracted.  The
+  release-1 graph-level extraction (`Port.cubic_flow_cdc`) in fact discards
+  the rotation witness `ρ` returned here and instead re-derives cycles via
+  generic even-edge-set circuit decomposition (`Statement.exists_cycle_decomposition'`);
+  see `Cover.lean`/`Cycle.lean` for the σ-closure/exact-two/unique-partner
+  facts that decomposition step relies on.
 -/
 
 namespace AffineCDC
@@ -158,12 +165,19 @@ lemma rho_rhoInv (hd : d ∈ D.Msupp m s) :
 
 /-! ## The cover -/
 
-/-- **G4** (cycle double cover): for a cubic dart structure with a
+/-- **G4** (indexed dart cover): for a cubic dart structure with a
 nowhere-zero flow into a codimension-one plane system, the supports of a
-glued gauge form a cycle double cover — σ-closed subgraphs covering every
-edge exactly twice, 2-regular wherever present, with the rotation witnessing
-the decomposition into cycles as its orbit decomposition. -/
-theorem exists_cycle_double_cover
+glued gauge form a Γ-indexed, σ-closed family of dart-subsets, each dart
+covered by exactly two of them, each member having a unique same-vertex
+partner, together with an explicit rotation `ρ` witnessing (via its orbits)
+the decomposition into cycles.
+
+This returns dart-level structural data, not a `Statement.IsCycleDoubleCover`
+on a Mathlib graph — see the module docstring above for the relationship to
+`Port.cubic_flow_cdc`, which extracts the graph-level cover by a different
+route (generic even-edge-set decomposition) and does not use the rotation
+`ρ` produced here. -/
+theorem exists_indexed_dart_cover
     [Fintype Δ] [DecidableEq Δ] [Fintype V] [DecidableEq V]
     (hcodim : ∀ u : V, Module.finrank (ZMod 2) (Γ ⧸ D.W u) = 1) :
     ∃ M : Γ → Set Δ,

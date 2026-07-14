@@ -308,7 +308,7 @@ theorem cubic_flow_cdc : CubicFlowCDCStatement := by
       (isPlane_vertexPlane hcubic hflow u.2).finrank_eq_two
     have hq := Submodule.finrank_quotient_add_finrank (D.W u)
     omega
-  obtain ⟨M, hσ, hcov2, huniq, -⟩ := D.exists_cycle_double_cover hcodim
+  obtain ⟨M, hσ, hcov2, huniq, -⟩ := D.exists_indexed_dart_cover hcodim
   -- edge supports
   set edgeSupp : Γ → Set β := fun s => (fun d : Dartt G => d.1.1) '' M s with hES
   -- (2) edge membership ⟺ endpoint-dart membership
