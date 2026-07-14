@@ -40,7 +40,7 @@ jobs:
           # 7GB runner (Mathlib env + every module in a single process). Each
           # module is checked in its own process so memory is released between.
           status=0
-          for m in AffineCDC.Basic AffineCDC.Rank AffineCDC.LocalEvenFamily AffineCDC.LocalClassification AffineCDC.Naturality AffineCDC.Torsor AffineCDC.OppositeFiber AffineCDC.EdgeQuotient AffineCDC.Gauge AffineCDC.DualConfig AffineCDC.Invariance AffineCDC.Branching AffineCDC.Dart AffineCDC.Fano AffineCDC.Comparison AffineCDC.Cover AffineCDC.Cycle AffineCDC.Statement AffineCDC.Decompose AffineCDC.Port; do
+          for m in AffineCDC.Basic AffineCDC.Rank AffineCDC.LocalEvenFamily AffineCDC.LocalClassification AffineCDC.Naturality AffineCDC.Torsor AffineCDC.OppositeFiber AffineCDC.EdgeQuotient AffineCDC.Gauge AffineCDC.DualConfig AffineCDC.Invariance AffineCDC.Branching AffineCDC.Dart AffineCDC.Fano AffineCDC.Comparison AffineCDC.Cover AffineCDC.Cycle AffineCDC.Statement AffineCDC.Decompose AffineCDC.Port AffineCDC.Audit; do
             out=$(lake exe runLinter "$m" 2>&1)
             echo "$out"
             if echo "$out" | grep -qiE "error|found the following"; then status=1; fi
