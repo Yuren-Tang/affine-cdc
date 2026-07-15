@@ -1,73 +1,84 @@
-# AffineCDC — 對 OpenAI CDC 證明的數學考古
+# AffineCDC
 
-**目標**：對 OpenAI 2026-07-10 發表的 Cycle Double Cover 三頁證明做「規範不變化」的逆向工程（gauge-fixing 的反向操作）——剝除所有依賴局部座標、排序、任選基點的描述，只留下規範不變的數學本體，最終形成一篇關於**結構提純**的論文，並附帶完整的 Lean 形式化。
+**目前狀態（2026-07-15）**：本庫是 AffineCDC 的公開 Lean 審計與文件入口。現行狀態以本文件及 [`docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md`](docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md) 為準；其他舊導航、帳本及施工計畫如與二者衝突，均僅作歷史記錄。
 
-本項目**內容上獨立**於本工作區的 Erdős 306 項目，僅共享基礎設施（Lean 工具鏈 v4.31.0 + Mathlib 構建緩存，經 APFS clonefile 秒級複製，零額外磁盤）。
+## 核准的數學目標
 
-## 源頭
+> 每個有限無橋多重圖都有循環雙覆蓋。
 
-- 全程規劃討論：[docs/ChatGPT對話紀錄.md](docs/ChatGPT對話紀錄.md)（原鏈接 chatgpt.com/share/6a53dc5b-…）
-- 核心重構：CDC 證明的真正主定理是 **Fano 相容性定理** —— 對三次圖上任意 nowhere-zero F₂³-flow，天然相容性類 `c_f ∈ ⊕ₑ Q_e`（`Q_e = Γ/⟨f(e)⟩`）落在 `im δ_f` 中；CDC 是其推論。
-- 一切結構最終落回 **characteristic 2**：局部資料 = 規範場，頂點平移 = 規範變換，`[c_f] ∈ coker δ_f` = 規範不變量。
+此處允許自環。自然的循環物件是非空、按包含關係極小的 cut-even 邊集，因此單個自環本身即為一個 circuit。自然的有限性條件是有效邊集 `E(G).Finite`，不是整個 ambient vertex/edge type 有限。
 
-## 工作方式（三步節奏）
+作者已核准 **Path A**：日後把公開 Lean statement 乾淨遷移到上述完整命題及語義。此遷移**尚未實作**；本輪僅同步文件，不改任何 `.lean` 檔。
 
-1. **紙面封閉**：精確定理、最弱假設、完整證明 → 記入 [docs/ledger.md](docs/ledger.md)（定理帳本）。
-2. **Lean 薄驗證**：只形式化該塊核心定義與最重要定理；發現規格問題立即回修紙面。
-3. **API 凍結**：塊不再變動後，才允許下一層依賴。
+## 目前已由 Lean 核驗
 
-Lean 永遠落後紙面**一個模組**。
+現有公開 Lean 開發已包含：
 
-**本項目的 Lean 紀律**（用戶指令，優先於工程便利）：即便接受工程上的穩健措施，最終形態必須像數學一樣明徹——不犧牲一般性（任意 F₂-向量空間、不排序方向集）、不用 `sorry`、不以 tactic 堆砌掩蓋定義缺陷。若某塊在 Lean 中寫得扭曲，先懷疑定義，回修紙面。
+- 局部 affine-family 分類及 quotient／gauge／dual／branching／Fano 核心；
+- rank-three affine compatibility 的現行 branching/cross-bit 證明；
+- indexed dart-support 構造及每邊恰覆蓋兩次的性質；
+- 對一個已是 loopless cubic 且帶所需 nowhere-zero `F₂³`-flow 的圖，推出 CDC 的 `cubic_flow_cdc` corollary；
+- 現行有限偶邊集的 circuit decomposition 工具。
 
-## 目錄
+上述成果均是真實的 checked Lean 結果，但**不等於**完整無條件定理已經 machine-checked。
 
+## 尚未由 Lean 完成
+
+- Path A 的公開 statement 遷移；
+- 以 active edge-set finiteness 取代 ambient finiteness；
+- cut-even circuit 語義與自環刪除／回插；
+- graph-level multiset even double cover 作為獨立工程節點；
+- cubic expansion、rank-three flow 與 collapse 的完整外層；
+- pure cut-even collapse transport；
+- 原 loopless core 上的一次最終 circuit decomposition；
+- 完整有限無橋多重圖 CDC 定理。
+
+現行 `lean/AffineCDC/Statement.lean` 仍是 **loopless、ambient-finite、尚未被證明的 implementation checkpoint**。它不是已核准的最終自然陳述，也不得被描述成已完成遷移。
+
+## 核准的完整證明主幹
+
+```text
+有限無橋多重圖
+→ 刪除自環
+→ loopless 無橋核心
+→ cubic expansion 與 rank-three flow
+→ affine incidence compatibility
+→ graph-level multiset even double cover
+→ loopless 圖上的 vertex-even / cut-even 橋
+→ pure cut-even collapse transport
+→ 原 loopless 核心的 even double cover
+→ 僅在此處作一次有限 circuit decomposition
+→ 每個已刪自環加入兩個 singleton circuit occurrences
+→ 完整有限無橋多重圖 CDC。
 ```
-AffineCDC/
-  README.md            本文件
-  docs/
-    ChatGPT對話紀錄.md   源頭討論全文（用戶手動導出）
-    ledger.md           定理帳本：每塊的精確陳述、狀態、Lean 對應
-  lean/                 獨立 Lake 項目（只依賴 Mathlib）
-    AffineCDC/
-      Basic.lean              特徵二算術、方向、IsPlane（平面的內在 Klein 結構）
-      Rank.lean               finrank = 2 → IsPlane 橋接（座標被隔離在此檔）
-      LocalEvenFamily.lean    線族、覆蓋、偶性、平移作用
-      LocalClassification.lean 定理 A：Γ ≃ LocalEvenFamily W + torsor 等變性
-      Naturality.lean         推論 A2：沿線性同構的全套傳輸與交換圖
-      Torsor.lean             推論 A1 打包：AddTorsor + 仿射同構
-      OppositeFiber.lean      推論 A3：coset = 二點集、對向纖維刻畫
-      EdgeQuotient.lean       T3：邊商泛性、κ 唯一性、標籤公式
-      Gauge.lean              T4：coker 規範分類 + 對偶判準（任意域）
-      DualConfig.lean         T5：K(W) 與交叉配對位元 β
-      Invariance.lean         T6：β 的剪切唯一性（任意 Γ）
-      Branching.lean          T7 F1：分支恆等式（dim 3 唯一進場處）
-      Dart.lean               T7 F0：dart 圖層（規範自由的三次結構）
-      Fano.lean               T7 F2/F3：Fano 相容性定理（庫終點）
-      Comparison.lean         內化引理：原稿槽位構造 = Φ(t + f(b))
-      Audit.lean              一鍵公理審計
-```
 
-## 構建與驗證
+`cubic_flow_cdc` 是可保留、可審計的直接 corollary，但不是上述主幹的必要 waist，也不是公開最終定理。
+
+## 獨立性
+
+AffineCDC 的數學與 Lean 核心由本項目自己的分類、相容性及 cover 構造控制。其他 CDC formalization 不控制本項目的 theorem statement、圖編碼、工程架構或最終 proof path；本項目不得以直接調用另一套完整 CDC endpoint 代替自己的證明鏈。
+
+## 構建與核驗
 
 ```bash
 cd lean
-lake exe cache get   # 取 Mathlib 緩存(或由同 rev 項目 clonefile)
-lake build           # 全庫構建
-lake env lean AffineCDC/Audit.lean   # 一鍵公理審計:T1–T7 應全為 [propext, Classical.choice, Quot.sound]
+lake exe cache get
+lake build
+lake env lean AffineCDC/Audit.lean
 ```
 
-源碼掃描(應無輸出):
-`grep -rnE '\bsorry\b|\bnative_decide\b|^\s*(axiom|opaque|unsafe)\b' lean/AffineCDC --include='*.lean' | grep -v Audit`
+源碼掃描（預期無輸出）：
 
-## 當前狀態
+```bash
+grep -rnE '\bsorry\b|\bnative_decide\b|^\s*(axiom|opaque|unsafe)\b' \
+  lean/AffineCDC --include='*.lean' | grep -v Audit
+```
 
-**七條定理規格全部封閉且 Lean 完成**(2026-07-13):T1 局部分類、T2 自然性/torsor、
-T3 邊商泛性、T4 coker 規範分類、T5 交叉配對位元、T6 不變泛函唯一性(任意 Γ)、
-T7 分支恆等式與全局消失。庫終點 = **Fano 相容性定理**
-`DartFlow.exists_gluing`(`[c_f] = 0`)+ F3 標籤黏合;`dim Γ = 3` 唯一進場處
-= `annihilator_unique`(codim-1 形式)。本庫完全自圓,不依賴外部證明代碼;
-與原證明的逐項對應見 [docs/comparison-notes.md](docs/comparison-notes.md),
-其槽位構造被內化為 `slotFamily_eq_localFamily`(字典 `m⁰ = t + f(b)`)。
-實時帳本:[docs/ledger.md](docs/ledger.md)。下一階段:凍結期打磨
-(import 精簡、真依賴審查、上游化審計)與論文寫作。
+## 文件優先序
+
+1. 本 `README.md`；
+2. [`docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md`](docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md)；
+3. 實際 `.lean` 原始碼，用以確認目前已實作的精確狀態；
+4. 其他已明標為歷史／superseded 的文件，僅供追溯。
+
+歷史文件不得推翻目前入口，也不得把過去的 loopless endpoint、ambient-finite convention、可選整合或 `cubic_flow_cdc` 主線定位重新當成現行指令。
