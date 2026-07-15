@@ -1,3 +1,12 @@
+> **⛔ HISTORICAL / SUPERSEDED — 2026-07-15**
+> 本文件完整保留作研究與工程史料，**不得作為目前導航、狀態或施工指令**。
+> 現行入口為根目錄 `README.md` 與 `docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md`。
+> 下文關於 loopless 最終命題、ambient-finite 最終語義、可選端到端整合、
+> `cubic_flow_cdc` 作唯一 endpoint／waist，以及尚待選擇 loop convention 的說法，
+> 均早於已核准而尚未實作的 Path A；除非現行入口明確認可，皆視為歷史文字。
+
+---
+
 > **⚠ SUPERSEDED (架構部分) — 2026-07-14**
 > 本文件第 0 節「無條件 CDC = 論文 corollary、cdc-lean integration 僅為可選」的**架構結論已作廢**。
 > 規範文件為 `docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md`(在任何衝突中它勝出)。
