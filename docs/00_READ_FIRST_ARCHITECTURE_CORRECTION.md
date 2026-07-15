@@ -1,180 +1,140 @@
-# 00 — READ FIRST: definitive architecture correction
+# 00 — READ FIRST: current AffineCDC architecture and status
 
-**Date:** 2026-07-14  
-**Repository:** `Yuren-Tang/affine-cdc`  
-**Latest visible commit:** `596d488f3c448c385ad361f57df1532030a9f140`  
-**Purpose:** overwrite the architecture currently remaining in the truncated Opus context.
+**Date:** 2026-07-15  
+**Status:** current public architecture entry point  
+**Repository:** `Yuren-Tang/affine-cdc`
 
----
+This file and the root `README.md` supersede earlier navigation, ledger, resume,
+and mathematical-update documents wherever status or architecture conflicts.
+Historical bodies remain in the repository for chronology only.
 
-## 1. The last Opus understanding is superseded
+## 1. Approved natural theorem
 
-The following sentence is **wrong** and must not guide further work:
+The author-approved final theorem is:
 
-> “The endpoint is `cubic_flow_cdc : CubicFlowCDCStatement`; unconditional CDC is only a paper corollary; cdc-lean integration is optional and not a release prerequisite.”
+> Every finite bridgeless multigraph has a cycle double cover.
 
-The correct architecture is:
+“Finite” naturally means that the active edge set `E(G)` is finite. Loops are
+allowed. The natural circuit is a nonempty inclusion-minimal cut-even edge set;
+a singleton loop is therefore a circuit.
 
-\[
-\boxed{
-\texttt{cycle\_double\_cover : CDCStatement}
-}
-\]
+The loop reduction is explicit:
 
-is the final end-to-end theorem and audit target.
+1. delete every loop;
+2. prove CDC for the resulting loopless bridgeless core;
+3. add two singleton circuit occurrences for each deleted loop.
 
-`cubic_flow_cdc` is only an intermediate macro-Port theorem:
+This is **Path A**, and Path A has been approved.
 
-\[
-\text{cubic graph + nowhere-zero }\mathbf F_2^3\text{-flow}
-\Longrightarrow
-\text{standard cycle double cover}.
-\]
+## 2. Current Lean checkpoint is unchanged
 
-It is useful and should be completed, but it does not replace the unconditional statement.
+Approval of Path A did not edit Lean.
 
----
+The present `lean/AffineCDC/Statement.lean` still gives a loopless,
+ambient-finite audit statement using the current vertex-incidence parity
+convention. Its `CDCStatement` is defined but not proved.
 
-## 2. Why `Statement.lean` exists
+Consequently:
 
-`Statement.lean` was deliberately rewritten as a Mathlib-only, unconditional CDC audit surface:
+- the approved full theorem is the final mathematical target;
+- the current loopless statement is an implementation checkpoint;
+- the exact Path A migration packet remains pending;
+- the migration must not be described as already implemented or checked.
 
-```lean
-def CDCStatement : Prop :=
-  ∀ {α β : Type} [Finite α] [Finite β] (G : Graph α β),
-    Loopless G → Bridgeless G →
-    ∃ 𝒞 : Multiset (Set β), IsCycleDoubleCover G 𝒞
-```
+The exact future declaration names, signatures, compatibility lemmas, module
+order, and audit migration have not been selected by this documentation task.
 
-It contains no cubic, flow, dart, plane or gauge vocabulary.
+## 3. What is presently machine-checked
 
-The purpose of this work was not merely to display a paper corollary. The final integration theorem must directly inhabit this proposition:
+The current Lean repository verifies:
 
-```lean
-cycle_double_cover : CDCStatement
-```
+- local affine-family classification;
+- quotient, gauge, dual, invariance, branching, and Fano machinery;
+- the rank-three affine compatibility conclusion in the existing
+  branching/cross-bit presentation;
+- indexed dart-support construction with exact double coverage;
+- the Graph-to-DartFlow port for the current loopless cubic representation;
+- `cubic_flow_cdc`: a CDC corollary for an already cubic loopless graph carrying
+  the required nowhere-zero `F₂³`-flow;
+- finite even-support circuit decomposition in the current representation.
 
-The final audit is therefore:
+These are genuine checked results. They do not prove the full unconditional
+finite bridgeless-multigraph theorem.
 
-```lean
-#print CDCStatement
-#check cycle_double_cover
-#print axioms cycle_double_cover
-```
+## 4. What remains unproved in Lean
 
-plus a proof-path audit.
+- the Path A statement migration;
+- active-edge finiteness and intrinsic cut-even circuit semantics;
+- loop deletion and singleton-loop reinsertion;
+- a named graph-level multiset even-double-cover layer in the approved
+  architecture;
+- cubic expansion and the required rank-three flow on the loopless core;
+- the vertex-even/cut-even bridge at the required interfaces;
+- pure cut-even collapse transport;
+- the final end-to-end theorem.
 
----
-
-## 3. Core independence and full theorem closure are compatible
-
-Use a two-package architecture.
-
-### A. AffineCDC core
-
-The core remains completely self-contained and must never depend on `openai/cdc-lean`.
-
-Its chain is:
-
-```text
-T1 local classification
-→ gauge / cokernel obstruction
-→ Fano compatibility
-→ dart-level indexed even cover
-→ Graph-to-DartFlow port
-→ cubic_flow_cdc
-```
-
-### B. Isolated end-to-end integration
-
-A separate integration package/microproject may depend on the formalized outer infrastructure.
-
-It composes:
+## 5. Approved proof architecture
 
 ```text
-bridgeless graph
-→ cubic reduction
-→ nowhere-zero Γ-flow input
-→ AffineCDC cubic-flow cover
-→ cycle_double_cover : CDCStatement
+finite bridgeless multigraph
+→ delete loops
+→ loopless bridgeless core
+→ cubic expansion with rank-three binary flow
+→ affine incidence compatibility
+→ graph-level multiset even double cover
+→ vertex-even/cut-even bridge on the loopless expansion
+→ pure cut-even collapse transport
+→ even double cover of the loopless original core
+→ one final finite circuit decomposition
+→ two singleton circuit occurrences for every removed loop
+→ full finite bridgeless-multigraph CDC.
 ```
 
-This isolated integration **is required** for claiming that the complete unconditional CDC theorem is machine-checked end to end.
+The graph-level multiset even double cover is the natural affine output. Empty
+and repeated support occurrences are permitted. Circuit minimality is imposed
+only by the one final decomposition after collapse.
 
-It is not a dependency of the core, but it is a deliverable of the overall project.
+`CubicFlowCDCStatement` and `cubic_flow_cdc` remain legitimate descriptions of
+the current checked corollary. They are not the mandatory waist or the final
+headline.
 
----
+## 6. Hypothesis placement
 
-## 4. Do not shortcut the proof path
+- Looplessness is legitimate in the current Graph-to-DartFlow representation and
+  in the current vertex-even/cut-even bridge.
+- Looplessness is not an affine/Fano hypothesis and not an external theorem
+  hypothesis.
+- Connectedness is not required by affine compatibility.
+- Pure cut-even collapse transport should not assume looplessness,
+  connectedness, cubicity, a flow, affine data, or finite ambient carriers.
+- Ambient `[Finite α] [Finite β]` describes the current checkpoint, not the
+  natural final finiteness condition.
 
-The integration may reuse the old formalized outer reduction, but it must not simply call the old complete CDC endpoint.
+## 7. Independence and proof-path rule
 
-Required:
+No external CDC formalization controls this project. It may be studied for
+literature or provenance, but it does not determine this project's statement,
+encoding, architecture, or implementation.
 
-- follow/reuse the outer reduction infrastructure;
-- replace the old cubic cover engine with the AffineCDC construction;
-- expose a dependency/proof-path audit showing that the new affine core is genuinely used.
+The final theorem must be proved through the AffineCDC chain. Directly invoking
+another formalization's complete CDC endpoint is not an acceptable substitute.
 
-Forbidden shortcut:
+## 8. Documentation authority
 
-```lean
-exact CDCLean.cycleDoubleCover_of_bridgeless ...
-```
+For current public status use, in order:
 
-or any equivalent direct invocation of the old final theorem.
+1. the root `README.md`;
+2. this file;
+3. actual Lean source for the exact present implementation;
+4. historical files only for chronology.
 
----
+The following files are retained but superseded as active guidance:
 
-## 5. Comparison is a separate issue
+- `navigation-2026-07-14.md`;
+- `ledger.md`;
+- `01_ENGINEERING_RESUME_PLAN.md`;
+- `02_MATHEMATICAL_UPDATE.md`.
 
-The mathematical statement “this is an equivalent reconstruction of the original local construction” is carried primarily by T1:
-
-> T1 classifies all local even affine-line families.
-
-Therefore the original slot construction is automatically some `Φ_W(m)`.
-
-The explicit lemma
-
-```lean
-slotFamily_eq_localFamily
-```
-
-and dictionary
-
-\[
-m^0=t+f(b)
-\]
-
-remain valuable as a worked example and concrete dictionary, but are not the structural pillar and are not a reason to import external code.
-
-Keep these two questions separate:
-
-1. **comparison of mathematical constructions** — handled internally by T1;
-2. **end-to-end closure of theorem dependencies** — handled by the isolated integration layer.
-
----
-
-## 6. Current scope questions not yet finalized
-
-### Loops
-
-The current statement is loopless because `IsEven` counts `incidenceSet.ncard`, which counts a loop edge object once rather than degree contribution two.
-
-Mathematically, singleton loops can be length-one cycles and included twice. Postpone the final convention decision until after the Port assembly:
-
-- retain a loopless standard statement and add a pseudograph extension; or
-- introduce loop-aware parity.
-
-Do not claim “loops have no cover.”
-
-### Finiteness
-
-`[Finite α] [Finite β]` is an ambient-carrier convention. A later refinement may use active `V(G).Finite ∧ E(G).Finite`.
-
-Do not start a genuinely edge-infinite CDC project in this engineering pass.
-
----
-
-## 7. Immediate rule
-
-Before editing any documentation or code, treat every earlier handoff saying “paper-only unconditional corollary” or “optional full integration” as superseded by this file.
+Their old bodies may contain true historical facts or still-interesting
+mathematics, but their endpoint, loop, finiteness, integration, and work-order
+claims do not override this entry point.
