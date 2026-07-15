@@ -1,3 +1,12 @@
+> **⛔ HISTORICAL / SUPERSEDED AS CURRENT GUIDANCE — 2026-07-15**
+> 本文件完整保留作數學發展史料，其中若干結果仍可能有獨立價值；但其論文主幹、
+> 工作次序與「完成無條件 CDC 鏈後再處理」等狀態語句，**不再控制目前項目**。
+> 現行入口為根目錄 `README.md` 與 `docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md`。
+> 已核准而尚未實作的 Path A、even-cover／cut-even collapse／一次最終 decomposition／
+> loop reinsertion 主幹，在任何衝突中優先於下文。
+
+---
+
 # 02 — Mathematical update since Opus paused
 
 This file is informational. It records results found after the engineering pause. They should influence the paper and future Lean plan, but they must not derail the immediate P1/P2 engineering chain.
