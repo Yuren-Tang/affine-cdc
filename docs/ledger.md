@@ -1,3 +1,12 @@
+> **⛔ HISTORICAL / SUPERSEDED AS A LIVE LEDGER — 2026-07-15**
+> 本帳本完整保留作定理與工程發展史料，**不再是目前狀態、架構或施工次序的控制文件**。
+> 現行入口為根目錄 `README.md` 與 `docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md`。
+> 下文包含互相先後覆寫的歷史決策；尤其是 Fano／dart／`cubic_flow_cdc` 作 endpoint、
+> 外部整合可選或可重用既有 outer formalization、loop convention 尚未決、ambient finite
+> 作最終 statement 等內容，均不得凌駕已核准而尚未實作的 Path A。
+
+---
+
 # 定理帳本(Theorem Ledger)
 
 原則:逐塊封閉。每條定理記錄精確陳述、最弱假設、完整證明、依賴、來源分類
