@@ -1,3 +1,12 @@
+> **⛔ HISTORICAL / SUPERSEDED — 2026-07-15**
+> 本施工計畫完整保留作工程史料，**不得照此恢復施工**。
+> 現行入口為根目錄 `README.md` 與 `docs/00_READ_FIRST_ARCHITECTURE_CORRECTION.md`。
+> 下文的 P1/P2/P3 排序、外部 outer-infrastructure 重用方案、loop／finiteness 延後決策，
+> 以及以現行 loopless `CDCStatement` 為固定終點的安排，均早於已核准而尚未實作的
+> Path A。任何 Lean 工作須先有另行核准的精確 migration packet。
+
+---
+
 # 01 — Engineering resume plan for Opus
 
 **Base commit:** `596d488f3c448c385ad361f57df1532030a9f140`
